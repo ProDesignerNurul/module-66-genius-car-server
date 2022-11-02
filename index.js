@@ -19,6 +19,7 @@ async function run() {
         const serviceCollection = client.db('geniusCar').collection('services');
         const orderCollection = client.db('geniusCar').collection('orders');
 
+        // Services API 
         app.get('/services', async (req, res) => {
             const query = {};
             const cursor = serviceCollection.find(query);
@@ -31,6 +32,20 @@ async function run() {
             const query = {_id: ObjectId(id)};
             const service = await serviceCollection.findOne(query);
             res.send(service);
+        })
+
+        // order API 
+
+        app.get('/orders', async (req, res) => {
+            let query = {};
+            if(req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
+            const cursor = orderCollection.find(query);
+            const orders = await cursor.toArray();
+            res.send(orders)
         })
 
         app.post('/orders', async (req, res) => {
